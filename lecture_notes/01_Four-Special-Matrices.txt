@@ -1,0 +1,22 @@
+Matrix facets to consider:
+	1. Sparsity
+	2. Diagonality
+	3. Symmetry
+	4. Constant diagonals (Toeplitz)
+	5. Invertibility
+	6. Triangularity (closely related to sparsity)
+
+When seeking to solve a linear system, the question of invertibility arises.
+The naive way to check for invertibility is to ask about nonzero determinant.
+Strang dislikes determinants (loss of meaning, difficult to compute?).
+A more straightforward approach can be to use row reduction (Guassian elimination?).
+In using elimination, we seek to make the matrix upper triangular.
+That is, we want to "clean out" (make zero) entries beneath the diagonal.
+To do so, move down the matrix one row at a time.
+For each row after the top, make one additional rightward column a 0.
+That is, for second row, make first entry zero. For third row, two zeros, etc.
+To accomplish that, multiply scale above row by constant factor.
+Choose the factor such that +/- current row and row makes target entry a 0.
+Once the matrix is upper triangular, determinant is simply product of diagonal entries.
+Thus, the matrix is invertible if all diagonal entries are nonzero when it's upper triangular.
+
