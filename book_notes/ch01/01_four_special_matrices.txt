@@ -1,0 +1,41 @@
+Matrices are **operators** on vectors.
+Special matrices:
+	1. K
+	2. C
+	3. T
+	4. B
+
+Special matrix K:
+	- Symmetric
+	- Sparse
+	- Tridiagonal
+	- Constant diagonals
+	- Invertible
+	- Positive definite
+K has 2s on main diagonal, -1s on surrounding diagonals (bands).
+K family is **second difference** matrices.
+
+Changing southwest and northwest corners to -1 makes K circulant, noninvertible.
+That circulant matrix is C.
+Singular <--> Non-invertible <--> 0-determinant.
+Columns of C all add to 0-column.
+Nonzero solution n null space <--> singular, etc.
+u = (c, c, c, ...) in null space is like arbitrary constant C in calculus.
+That constant isn't knowable from derivative when we integrate.
+Similarly, constant vector in null space isn't knowable from Cu = 0.
+
+In practice, determinant is poor way to compute inverse.
+Instead, do elimination and look for nonzero pivots on main diagonal.
+
+Difference between *invertible* and *positive definite*:
+1. *Invertible* means *nonzero pivots*.
+2. *Positive definite* means *positive pivots*.
+3. *Invertible* matrix has all *nonzero eigenvalues*.
+4. *Positive definite* symmetric matrix has all *positive eigenvalues*.
+
+Circulant positive semidefiniteness:
+C is singular because when row-reduced, it's last row is all-0.
+This means C has (n-1) positivive eigenvalues, but 1 0 eigenvalue.
+C is *positive semidefinite*.
+
+
