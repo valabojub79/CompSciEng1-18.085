@@ -14,6 +14,9 @@ __author__ = "Vince Reuter"
 __email__ = "vince.reuter@gmail.com"
 
 
+__all__ = ["FixedFixed", "main_diagonal" "subdiagonal", "superdiagonal"]
+
+
 
 def subdiagonal(n):
     """
@@ -101,7 +104,16 @@ class FixedFixed(object):
                 list(superdiagonal(n))
         self.matrix = scipy.sparse.csc_matrix((data, index_pairs))
         self._unit_solution = None
-        
+
+
+    def n(self):
+        return self.shape[0]
+
+
+    @property
+    def shape(self):
+        return self.matrix.shape
+
     
     def solve_unit(self):
         """

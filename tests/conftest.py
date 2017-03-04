@@ -1,11 +1,14 @@
 """Project-wide test configuration.
 """
 
+import numpy.random as nprand
+import pytest
+
 __author__ = "Vince Reuter"
 __email__ = "vince.reuter@gmail.com"
 
 
-NAME_RANDOM_SIZE = "randsize"
+MAX_RANDOM_DIMENSION = 10001
 
 
 
@@ -23,7 +26,8 @@ def pytest_addoption(parser):
         The command-line argument parser used by pytest.
 
     """
-    parser.addoption("--{}".format(NAME_RANDOM_SIZE), type=int, default=10,
+    parser.addoption("--{}".format(random_dimension.__name__),
+                     type=int, default=10,
                      help="For tests requesting parameterization with respect "
                           "to randomized input data sizes, the number of "
                           "random values to generate and thus the number "
@@ -44,7 +48,13 @@ def pytest_generate_tests(metafunc):
         dynamic modification of it.
 
     """
-    if NAME_RANDOM_SIZE in metafunc.fixturenames():
+    if NAME_RANDOM_SIZE in metafunc.fixturenames:
         # Default handled in option definition
         num_random = getattr(metafunc.config.option, NAME_RANDOM_SIZE)
         metafunc.parametrize(NAME_RANDOM_SIZE, num_random)
+
+
+
+@pytest.fixture(scope="function")
+def random_dimension():
+    return nprand.randint(MAX_RANDOM_DIMENSION)

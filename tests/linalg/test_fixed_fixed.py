@@ -7,9 +7,12 @@ system "fixed at both ends," as Prof. Strang says. This matrix has
 
 """
 
+import pytest
+from delacourse.linalg import FixedFixed
 
 __author__ = "Vince Reuter"
 __email__ = "vince.reuter@gmail.com"
+
 
 
 class FixedFixedConstructorTests:
@@ -17,9 +20,11 @@ class FixedFixedConstructorTests:
     Tests for the instantiation of special matrix `K`.
     """
 
-    def test_dimension(self):
+    @pytest.mark.parametrize(argnames="n", argvalues=[])
+    def test_dimension(self, n):
         """ Matrix dimension should match specification. """
-        pass
+        assert n == FixedFixed(n).n
+        assert (n, n) == FixedFixed(n).shape
 
 
     def test_ones_null_solution(self):
