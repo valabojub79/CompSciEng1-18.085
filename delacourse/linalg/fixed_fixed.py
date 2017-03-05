@@ -34,21 +34,24 @@ class FixedFixed(IMatrix):
     """
 
     def __init__(self, n):
-        """Create a *fixed-fixed* system special matrix `K`.
+        """
+        Create a *fixed-fixed* system special matrix `K`.
 
         Parameters
         ----------
-        n : int
+        n : :obj:`int`
             Dimension for square matrix (row/column count).
 
         Raises
         ------
-        linalg.matrix.DimensionException
+        :obj:`linalg.matrix.DimensionException`
             If the given size is less than 2.
 
         """
         if n < 2:
-            raise DimensionException(n)
+            raise DimensionException(
+                    "Too small of dimension for {}: {}".
+                    format(self.__class__.__name__, n))
         data = np.concatenate(
                 (-1 * np.ones(n - 1),
                  2 * np.ones(n),
@@ -76,12 +79,42 @@ class FixedFixed(IMatrix):
 
     @property
     def n(self):
+        """
+        Get the side length of the underlying square matrix.
+
+        Returns
+        -------
+        :obj:`int`
+            Side length of the underlying square matrix.
+
+        """
         return self.shape[0]
 
 
     @property
     def shape(self):
-        return self.matrix.shape
+        """
+        Determine the shape of the underlying matrix.
+
+        Returns
+        -------
+        :obj:`tuple` of :obj:`int`
+            Pair of row count and column count for matrix, should be equal.
+
+        Raises
+        ------
+        :obj:`linalg.matrix.DimensionException`
+            If the underlying matrix has been modified to not be square.
+
+        """
+        dims = self.matrix.shape
+        if len(dims) != 2:
+            raise DimensionException(
+                    "Not two dimensions: {}".format(len(dims)))
+        if dims[0] != dims[1]:
+            raise DimensionException(
+                    "Not square: {} x {}".format(dims[0], dims[1]))
+        return dims
 
     
     def solve_unit(self):
@@ -93,7 +126,7 @@ class FixedFixed(IMatrix):
 
         Raises
         ------
-        numpy.linalg.linalg.LinAlgError
+        :obj:`numpy.linalg.linalg.LinAlgError`
             If this the underlying coefficient matrix has been
             tampered with such that it's singular / non-invertible
 

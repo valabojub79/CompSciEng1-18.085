@@ -24,6 +24,7 @@ __email__ = "vince.reuter@gmail.com"
 _LOGGER = logging.getLogger("{}.{}".format("delacourse", __name__))
 
 
+
 class FixedFixedConstructorTests:
     """
     Tests for the instantiation of special matrix `K`.
@@ -37,14 +38,17 @@ class FixedFixedConstructorTests:
 
 
     @pytest.mark.random(
-        RandomParams(nprand.randint, low=delautils.minint(), high=0))
+            RandomParams(nprand.randint,
+                         kwargs={"low": delautils.minint(), "high": 0}))
     def test_negative_dimension(self, random):
         """ Singleton K is prohibited. """
         with pytest.raises(DimensionException):
             FixedFixed(random)
 
 
-    @pytest.mark.random(RandomParams(nprand.randint, low=2, high=10001))
+    @pytest.mark.random(
+            RandomParams(nprand.randint, max_tests=5,
+                         kwargs={"low": 2, "high": 10001}))
     def test_valid_dimension(self, random):
         """ Matrix dimension should match specification. """
         assert random == FixedFixed(random).n

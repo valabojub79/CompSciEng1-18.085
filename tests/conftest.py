@@ -5,24 +5,23 @@ Project-wide test configuration.
 
 import logging
 import os
-import numpy.random as nprand
 import pytest
 from delacourse import setup_project_logger
-from delacourse import utils as delautils
+
 
 __author__ = "Vince Reuter"
 __email__ = "vince.reuter@gmail.com"
 
 
+_LOGGER = logging.getLogger(__name__)
 NAME_RANDOM_SIZE = "num-random"
 LOGLEVEL_OPTNAME = "--logging-level"
-
-_LOGGER = logging.getLogger(__name__)
 
 
 
 @pytest.fixture(scope="session")
 def session_logging(request):
+    """ Establish logger for the testing session. """
     setup_project_logger(level=request.config.getoption(LOGLEVEL_OPTNAME))
     global _LOGGER
     _LOGGER = logging.getLogger(
@@ -41,7 +40,7 @@ def pytest_addoption(parser):
 
     Parameters
     ----------
-    parser : pytest._pytest.config.Parser
+    parser : :obj:`pytest._pytest.config.Parser`
         The command-line argument parser used by pytest.
 
     """
@@ -79,12 +78,64 @@ def pytest_generate_tests(metafunc):
 
 
 class RandomParams(object):
+    """
+    Provide random value parameterization for a test case.
 
-    def __init__(self, func, *args, **kwargs):
+    This small class provides an interface through which a test case
+    can specify a request for randomized parameterization. This is
+    accomplished by leveraging pytest's marking mechanism and using
+    the :obj:`Metafunc` object available in the :obj:`pytest_generate_tests`
+    hook. The random data generation function and arguments are
+    designated by tagging a test case with  :obj:`pytest.mark.random`
+    and building an instance of this class. The instance of this class
+    is then available within the :obj:`MarkInfo` object that's accessible
+    in :obj:`pytest_generate_tests`. To get at the generation data stored
+    here, the tests generation function calls
+    :obj:`getattr(metafunc.function)`, passing "random" as the second
+    argument (this is the name for this special mark and the fixture
+    name that the tests generator looks for to determine whether it
+    needs to build the random parameter arguments.
+
+    """
+
+
+    def __init__(self, func, args=None, kwargs=None, max_tests=float("inf")):
+        """
+        Define the parameterization mechanism with a function and arguments.
+
+        Parameters
+        ----------
+        func : :obj:`callable`
+            The function responsible for generating the random arguments.
+        args : :obj:`tuple`
+            Positional arguments to pass to :obj:`func`.
+        kwargs : :obj:`dict`
+            Keyword arguments to pass to :obj:`func`.
+        max_tests : :obj:`int`
+        """
         super(RandomParams, self).__init__()
         self.f = func
-        self.args = args
-        self.kwargs = kwargs
+        self.args = args or tuple()
+        self.kwargs = kwargs or dict()
+        self.limit = max_tests
+
 
     def build(self, n):
-        return [self.f(*self.args, **self.kwargs) for _ in range(n)]
+        """
+        Create n random argument values for a parameter.
+
+        Parameters
+        ----------
+        n : :obj:`int`
+            Number of random argument values to generate for a parameter.
+
+        Returns
+        -------
+        :obj:`list`
+            List of random arguments for a parameter, of requested size.
+
+        """
+        num_values = min(n, self.limit)
+        _LOGGER.debug("Creating %d arguments (limit=%d, requested=%s)",
+                      num_values, self.limit, n)
+        return [self.f(*self.args, **self.kwargs) for _ in range(num_values)]
