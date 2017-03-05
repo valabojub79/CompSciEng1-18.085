@@ -9,3 +9,4 @@ provides some of the same assignment-related and other functionality.
 """
 
 from fixed_fixed import *
+from . import matrix

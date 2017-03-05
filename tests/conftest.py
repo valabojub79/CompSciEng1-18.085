@@ -10,6 +10,7 @@ __author__ = "Vince Reuter"
 __email__ = "vince.reuter@gmail.com"
 
 
+NAME_RANDOM_SIZE = "num-random"
 MAX_RANDOM_DIMENSION = 10001
 
 
@@ -28,7 +29,7 @@ def pytest_addoption(parser):
         The command-line argument parser used by pytest.
 
     """
-    parser.addoption("--{}".format(random_dimension.__name__),
+    parser.addoption("--{}".format(NAME_RANDOM_SIZE),
                      type=int, default=10,
                      help="For tests requesting parameterization with respect "
                           "to randomized input data sizes, the number of "
@@ -50,10 +51,11 @@ def pytest_generate_tests(metafunc):
         dynamic modification of it.
 
     """
-    if NAME_RANDOM_SIZE in metafunc.fixturenames:
+    if random_dimension.__name__ in metafunc.fixturenames:
         # Default handled in option definition
         num_random = getattr(metafunc.config.option, NAME_RANDOM_SIZE)
-        metafunc.parametrize(NAME_RANDOM_SIZE, num_random)
+        metafunc.parametrize.kwargs[random_dimension.__name__] = \
+            nprand.randint(low=2, high=MAX_RANDOM_DIMENSION, size=num_random)
 
 
 

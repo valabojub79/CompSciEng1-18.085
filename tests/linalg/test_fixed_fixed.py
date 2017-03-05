@@ -21,11 +21,20 @@ class FixedFixedConstructorTests:
     Tests for the instantiation of special matrix `K`.
     """
 
-    @pytest.mark.parametrize(argnames="n", argvalues=[])
+    def test_empty(self):
+        pass
+
+
+    def test_single(self):
+        pass
+
+
+    @pytest.mark.parametrize(argnames="n", argvalues=[2, 3, 4])
     def test_dimension(self, n):
         """ Matrix dimension should match specification. """
         assert n == FixedFixed(n).n
-        assert (n, n) == FixedFixed(n).shape
+        assert (n, n) == \
+               FixedFixed(n).shape
 
 
     def test_ones_null_solution(self):
@@ -43,6 +52,15 @@ class FixedFixedSolveOnesTests:
     """
     Tests for solving system in which `K` is the coefficient matrix.
     """
+
+
+    def test_empty(self):
+        pass
+
+
+    def test_single(self):
+        pass
+
 
     def test_accuracy(self):
         """ The solver should be accurate. """
