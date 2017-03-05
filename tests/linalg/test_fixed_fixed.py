@@ -9,8 +9,13 @@ system "fixed at both ends," as Prof. Strang says. This matrix has
 """
 
 import logging
+import numpy.random as nprand
 import pytest
-from delacourse.linalg import FixedFixed
+from tests.conftest import RandomParams
+from delacourse.linalg.fixed_fixed import FixedFixed
+from delacourse.linalg.matrix import DimensionException
+from delacourse import utils as delautils
+
 
 __author__ = "Vince Reuter"
 __email__ = "vince.reuter@gmail.com"
@@ -24,24 +29,26 @@ class FixedFixedConstructorTests:
     Tests for the instantiation of special matrix `K`.
     """
 
-    def test_empty(self):
-        """ Empty Matrix is allowed. """
-        ff = FixedFixed(0)
-        assert 0 == ff.n
-        assert (0, 0) == ff.shape
+    @pytest.mark.parametrize(argnames="dim", argvalues=[0, 1])
+    def test_small_nonnegative_dimension(self, dim):
+        """ Empty Matrix K is prohibited. """
+        with pytest.raises(DimensionException):
+            FixedFixed(dim)
 
 
-    def test_single(self):
-        """ Lone entry is a 2. """
-        pass
+    @pytest.mark.random(
+        RandomParams(nprand.randint, low=delautils.minint(), high=0))
+    def test_negative_dimension(self, random):
+        """ Singleton K is prohibited. """
+        with pytest.raises(DimensionException):
+            FixedFixed(random)
 
 
-    @pytest.mark.parametrize(argnames="random_dimension", argvalues=[])
-    def test_dimension(self, random_dimension):
+    @pytest.mark.random(RandomParams(nprand.randint, low=2, high=10001))
+    def test_valid_dimension(self, random):
         """ Matrix dimension should match specification. """
-        assert random_dimension == FixedFixed(random_dimension).n
-        assert (random_dimension, random_dimension) == \
-               FixedFixed(random_dimension).shape
+        assert random == FixedFixed(random).n
+        assert (random, random) == FixedFixed(random).shape
 
 
     def test_ones_null_solution(self):

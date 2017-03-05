@@ -41,7 +41,14 @@ class FixedFixed(IMatrix):
         n : int
             Dimension for square matrix (row/column count).
 
+        Raises
+        ------
+        linalg.matrix.DimensionException
+            If the given size is less than 2.
+
         """
+        if n < 2:
+            raise DimensionException(n)
         data = np.concatenate(
                 (-1 * np.ones(n - 1),
                  2 * np.ones(n),

@@ -10,7 +10,7 @@ __email__ = "vince.reuter@gmail.com"
 
 
 __all__ = ["main_diagonal", "subdiagonal", "superdiagonal",
-           "IMatrix", "MatrixIndexError"]
+           "IMatrix", "DimensionException", "MatrixIndexError"]
 
 
 
@@ -31,6 +31,7 @@ def subdiagonal(n):
     """
     for i in range(1, n):
         yield i, i - 1
+
 
 
 def main_diagonal(n):
@@ -86,18 +87,16 @@ class IMatrix(object):
 
 
 
+class DimensionException(Exception):
+    """ Negative (and sometimes very small) dimensions are prohibited. """
+    def __init__(self, reason):
+        super(DimensionException, self).__init__(self, reason)
+
+
+
 class MatrixIndexError(Exception):
     """
     Restrict indexing mode for accessing matrix vector(s) / element(s).
     """
     def __init__(self, reason):
-        """
-        Create the exception with a contextual message.
-
-        Parameters
-        ----------
-        reason : str
-            The context in which the exception arose.
-
-        """
         super(MatrixIndexError, self).__init__(self, reason)

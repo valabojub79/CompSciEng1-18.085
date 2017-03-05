@@ -7,6 +7,3 @@ The course materials are oriented toward MATLAB, but this package
 provides some of the same assignment-related and other functionality.
 
 """
-
-from fixed_fixed import *
-from . import matrix

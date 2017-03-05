@@ -8,6 +8,7 @@ import os
 import numpy.random as nprand
 import pytest
 from delacourse import setup_project_logger
+from delacourse import utils as delautils
 
 __author__ = "Vince Reuter"
 __email__ = "vince.reuter@gmail.com"
@@ -15,7 +16,6 @@ __email__ = "vince.reuter@gmail.com"
 
 NAME_RANDOM_SIZE = "num-random"
 LOGLEVEL_OPTNAME = "--logging-level"
-MAX_RANDOM_DIMENSION = 10001
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -69,25 +69,22 @@ def pytest_generate_tests(metafunc):
         dynamic modification of it.
 
     """
-    if random_dimension.__name__ in metafunc.fixturenames:
-        # Default handled in option definition
+    if "random" in metafunc.fixturenames:
+        # Default setting is handled in option definition.
         num_random = getattr(metafunc.config.option,
                              NAME_RANDOM_SIZE.replace("-", "_"))
-        try:
-            metafunc.parametrize(
-                    random_dimension.__name__,
-                    nprand.randint(low=2, high=MAX_RANDOM_DIMENSION,
-                                   size=num_random))
-        except AttributeError:
-            # DEBUG
-            _LOGGER.error("METAFUNC: {}".format(dir(metafunc)))
-            _LOGGER.error("PARAMETRIZE: {}".format(dir(metafunc.parametrize)))
-            print("METAFUNC: {}".format(dir(metafunc)))
-            print("PARAMETRIZE: {}".format(dir(metafunc.parametrize)))
-            raise
+        generator = getattr(metafunc.function, "random").args[0]
+        metafunc.parametrize("random", generator.build(num_random))
 
 
 
-@pytest.fixture(scope="function")
-def random_dimension():
-    return nprand.randint(MAX_RANDOM_DIMENSION)
+class RandomParams(object):
+
+    def __init__(self, func, *args, **kwargs):
+        super(RandomParams, self).__init__()
+        self.f = func
+        self.args = args
+        self.kwargs = kwargs
+
+    def build(self, n):
+        return [self.f(*self.args, **self.kwargs) for _ in range(n)]
