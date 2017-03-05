@@ -5,10 +5,11 @@
 Represents a system "fixed" at both ends.
 """
 
+import logging
 import numpy as np
 import scipy.sparse
 import scipy.linalg
-from matrix import main_diagonal, subdiagonal, superdiagonal
+from matrix import *
 
 
 __author__ = "Vince Reuter"
@@ -18,8 +19,11 @@ __email__ = "vince.reuter@gmail.com"
 __all__ = ["FixedFixed"]
 
 
+_LOGGER = logging.getLogger(__name__)
 
-class FixedFixed(object):
+
+
+class FixedFixed(IMatrix):
     """
     Fixed-fixed system matrix, defined by dimension.
 
@@ -39,13 +43,28 @@ class FixedFixed(object):
 
         """
         data = np.concatenate(
-                (-1 * np.ones(n - 1), 2 * np.ones(n), -1 * np.ones(n - 1)))
+                (-1 * np.ones(n - 1),
+                 2 * np.ones(n),
+                 -1 * np.ones(n - 1)))
         index_pairs = \
                 list(subdiagonal(n)) + \
                 list(main_diagonal(n)) + \
                 list(superdiagonal(n))
-        self.matrix = scipy.sparse.csc_matrix((data, zip(*index_pairs)))
+        self.matrix = scipy.sparse.csc_matrix(
+                (data, zip(*index_pairs)), shape=(n, n))
         self._unit_solution = None
+
+
+    def __getitem__(self, index):
+        try:
+            i, j = index
+        except ValueError:
+            raise MatrixIndexError(
+                    "Specify pair of indices or use "
+                    "colon-based syntax to select vector")
+        if i == ":" and j == ":":
+            return self.matrix
+        return self.matrix[i, j]
 
 
     @property
@@ -73,8 +92,8 @@ class FixedFixed(object):
 
         """
         if self._unit_solution is None:
-            return scipy.linalg.solve(self.matrix,
-                                      np.ones(shape=(self.matrix.shape[1], 1)))
+            return scipy.linalg.solve(
+                    self.matrix, np.ones(shape=(self.matrix.shape[1], 1)))
         else:
             return self._unit_solution
 

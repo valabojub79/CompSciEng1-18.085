@@ -8,12 +8,15 @@ system "fixed at both ends," as Prof. Strang says. This matrix has
 
 """
 
+import logging
 import pytest
 from delacourse.linalg import FixedFixed
 
 __author__ = "Vince Reuter"
 __email__ = "vince.reuter@gmail.com"
 
+
+_LOGGER = logging.getLogger("{}.{}".format("delacourse", __name__))
 
 
 class FixedFixedConstructorTests:
@@ -22,19 +25,23 @@ class FixedFixedConstructorTests:
     """
 
     def test_empty(self):
-        pass
+        """ Empty Matrix is allowed. """
+        ff = FixedFixed(0)
+        assert 0 == ff.n
+        assert (0, 0) == ff.shape
 
 
     def test_single(self):
+        """ Lone entry is a 2. """
         pass
 
 
-    @pytest.mark.parametrize(argnames="n", argvalues=[2, 3, 4])
-    def test_dimension(self, n):
+    @pytest.mark.parametrize(argnames="random_dimension", argvalues=[])
+    def test_dimension(self, random_dimension):
         """ Matrix dimension should match specification. """
-        assert n == FixedFixed(n).n
-        assert (n, n) == \
-               FixedFixed(n).shape
+        assert random_dimension == FixedFixed(random_dimension).n
+        assert (random_dimension, random_dimension) == \
+               FixedFixed(random_dimension).shape
 
 
     def test_ones_null_solution(self):

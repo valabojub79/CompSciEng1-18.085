@@ -3,11 +3,14 @@
 Working with matrices.
 """
 
+import abc
+
 __author__ = "Vince Reuter"
 __email__ = "vince.reuter@gmail.com"
 
 
-__all__ = ["main_diagonal", "subdiagonal", "superdiagonal"]
+__all__ = ["main_diagonal", "subdiagonal", "superdiagonal",
+           "IMatrix", "MatrixIndexError"]
 
 
 
@@ -67,3 +70,34 @@ def superdiagonal(n):
     """
     for i in range(0, n - 1):
         yield i, i + 1
+
+
+
+class IMatrix(object):
+    """
+    Matrix interface.
+    """
+
+    __metaclass__ = abc.ABCMeta
+
+    @abc.abstractmethod
+    def __getitem__(self, item):
+        pass
+
+
+
+class MatrixIndexError(Exception):
+    """
+    Restrict indexing mode for accessing matrix vector(s) / element(s).
+    """
+    def __init__(self, reason):
+        """
+        Create the exception with a contextual message.
+
+        Parameters
+        ----------
+        reason : str
+            The context in which the exception arose.
+
+        """
+        super(MatrixIndexError, self).__init__(self, reason)
