@@ -1,4 +1,6 @@
-"""Project-wide test configuration.
+# -*- coding: utf-8 -*-
+"""
+Project-wide test configuration.
 """
 
 import numpy.random as nprand

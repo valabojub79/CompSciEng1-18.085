@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Linear algebra code inspired by MIT Computational Science and Engineering I.
 

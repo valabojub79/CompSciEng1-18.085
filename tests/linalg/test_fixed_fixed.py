@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Tests for special matrix `K`, representing a "fixed-fixed" system.
 
