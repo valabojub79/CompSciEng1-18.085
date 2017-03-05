@@ -14,7 +14,7 @@ __author__ = "Vince Reuter"
 __email__ = "vince.reuter@gmail.com"
 
 
-__all__ = ["FixedFixed", "main_diagonal" "subdiagonal", "superdiagonal"]
+__all__ = ["FixedFixed", "main_diagonal", "subdiagonal", "superdiagonal"]
 
 
 

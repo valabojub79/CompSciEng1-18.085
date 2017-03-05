@@ -42,7 +42,8 @@ def discover_version():
 version = discover_version()
 
 
-setup(description="Differential equations and linear algebra",
+setup(name=PROJECT_NAME,
+      description="Differential equations and linear algebra",
       long_description="Differential equations and linear algebra, "
                        "inspired by lectures, readings, and exercises from "
                        "MIT OCW 18.085 (Computational Science and "
