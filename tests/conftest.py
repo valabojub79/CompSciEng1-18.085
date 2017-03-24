@@ -97,8 +97,7 @@ class RandomParams(object):
     needs to build the random parameter arguments.
 
     """
-
-
+    
     def __init__(self, func, args=None, kwargs=None, max_tests=float("inf")):
         """
         Define the parameterization mechanism with a function and arguments.
